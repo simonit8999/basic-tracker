@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHOICE — 30 дней</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card-bg: #111111;
+            --text-primary: #FFD700;
+            --text-secondary: #aaa;
+            --text-muted: #666;
+            --border-color: rgba(255,215,0,0.1);
+            --success: #2e7d32;
+            --success-light: #4caf50;
+            --danger: #8b0000;
+            --danger-light: #d32f2f;
+            --warning: #e64a19;
+            --warning-light: #FF5722;
+            --shadow: 0 8px 32px rgba(0,0,0,0.6);
+            --stat-bg: #1a1a1a;
+            --cell-bg: #1a1a1a;
+            --cell-text: #888;
+            --nav-bg: #0a0a0a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: #0a0a0a;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; 
+            padding: 10px; min-height: 100vh; min-height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        
+        @keyframes pulseStrong {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700; }
+            50% { box-shadow: 0 0 20px #FFD700, 0 0 40px rgba(255,215,0,0.5); }
+        }
+        
+        @keyframes glowGreen {
+            0%, 100% { box-shadow: 0 0 5px #4caf50; }
+            50% { box-shadow: 0 0 20px #4caf50, 0 0 30px rgba(76,175,80,0.5); }
+        }
+        
+        @keyframes glowRed {
+            0%, 100% { box-shadow: 0 0 5px #f44336; }
+            50% { box-shadow: 0 0 20px #f44336, 0 0 30px rgba(244,67,54,0.5); }
+        }
+        
+        @keyframes glowOrange {
+            0%, 100% { box-shadow: 0 0 5px #FF5722; }
+            50% { box-shadow: 0 0 20px #FF5722, 0 0 30px rgba(255,87,34,0.5); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        .container { 
+            max-width: 460px; width: 100%; margin: 0 auto; 
+            animation: slideIn 0.5s ease;
+            display: flex; flex-direction: column;
+            height: 100vh; height: 100dvh;
+        }
+        
+        .card { 
+            background: var(--card-bg); border-radius: 28px; padding: 14px; 
+            box-shadow: var(--shadow); display: flex; flex-direction: column;
+            flex: 1; min-height: 0;
+        }
+        
+        .screen { 
+            flex: 1; min-height: 0;
+            display: none; flex-direction: column; 
+            animation: slideIn 0.4s ease;
+        }
+        .screen.active { display: flex; }
+        
+        .bottom-nav { 
+            margin-top: 8px; display: flex; gap: 6px; 
+            background: var(--nav-bg); border-radius: 40px; padding: 5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+        
+        .nav-btn { 
+            flex: 1; background: transparent; color: var(--text-muted); 
+            border: none; padding: 10px 0; border-radius: 30px; font-weight: bold; 
+            cursor: pointer; font-size: 0.7rem; transition: all 0.3s; text-align: center;
+        }
+        
+        .nav-btn.active { 
+            background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .nav-btn:active { transform: scale(0.96); }
+        
+        .logo { 
+            font-size: 1.1rem; font-weight: 900; color: var(--text-primary); 
+            margin-bottom: 4px; text-align: center; flex-shrink: 0;
+        }
+        
+        .stats-cards { display: flex; gap: 5px; margin: 4px 0; flex-shrink: 0; }
+        
+        .stat-card { 
+            background: var(--stat-bg); border-radius: 12px; padding: 6px 5px; 
+            flex: 1; text-align: center; border: 1px solid var(--border-color);
+        }
+        
+        .stat-value { font-size: 1rem; font-weight: bold; color: var(--text-primary); }
+        .stat-label { font-size: 0.5rem; color: var(--text-secondary); margin-top: 1px; }
+        
+        .progress-bar-container { 
+            background: var(--stat-bg); border-radius: 20px; height: 4px; 
+            margin: 4px 0; overflow: hidden; border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        
+        .progress-fill { 
+            background: linear-gradient(90deg, #2e7d32, #4caf50, #8bc34a);
+            background-size: 200% 100%;
+            width: 0%; height: 100%; transition: width 0.5s ease; border-radius: 20px;
+            animation: shimmer 3s linear infinite;
+        }
+        
+        .progress-text { 
+            color: var(--text-primary); font-size: 0.55rem; text-align: center; 
+            margin-bottom: 1px; font-weight: bold; flex-shrink: 0;
+        }
+        
+        .current-day-text { 
+            color: var(--text-primary); margin: 2px 0; font-size: 0.65rem; 
+            text-align: center; font-weight: bold; flex-shrink: 0;
+        }
+        
+        .grid { 
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; 
+            margin: 4px 0; flex-shrink: 0;
+        }
+        
+        .day-cell { 
+            background: var(--cell-bg); color: var(--cell-text); 
+            aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; 
+            border-radius: 7px; font-weight: bold; font-size: 0.6rem; cursor: pointer; 
+            transition: all 0.3s; border: 1px solid var(--border-color);
+        }
+        
+        .day-cell:active { transform: scale(0.9); }
+        .day-cell.completed { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; font-size: 0.55rem; }
+        .day-cell.current { border: 2px solid #FFD700; animation: glow 2s ease-in-out infinite; color: #FFD700; font-size: 0.65rem; }
+        
+        .action-panel { display: flex; gap: 5px; margin: 4px 0; flex-shrink: 0; }
+        
+        .action-btn { 
+            flex: 1; padding: 8px 5px; border: none; border-radius: 12px; 
+            font-weight: bold; font-size: 0.65rem; cursor: pointer; transition: all 0.3s; text-align: center;
+        }
+        
+        .action-btn:active { transform: scale(0.95); }
+        .success-btn { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; animation: glowGreen 2s ease-in-out infinite; }
+        .fail-btn { background: linear-gradient(135deg, #8b0000, #d32f2f); color: white; animation: glowRed 2s ease-in-out infinite; }
+        .help-btn { background: linear-gradient(135deg, #e64a19, #FF5722); color: white; animation: glowOrange 2s ease-in-out infinite, pulseStrong 1.5s ease-in-out infinite; }
+        
+        .reset-btn { 
+            background: rgba(255,255,255,0.02); 
+            color: var(--text-secondary); 
+            border: none; 
+            padding: 6px 14px; 
+            border-radius: 15px; 
+            width: auto;
+            margin: 3px auto 0 auto;
+            cursor: pointer; 
+            font-size: 0.55rem; 
+            font-weight: 500; 
+            text-align: center; 
+            flex-shrink: 0;
+            transition: all 0.3s;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+        .reset-btn:active { transform: scale(0.96); background: rgba(255,68,68,0.12); }
+        
+        .premium-card {
+            background: var(--stat-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+        }
+        
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+        .premium-feature:last-child { border-bottom: none; }
+        
+        .premium-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+        .premium-btn:active { transform: scale(0.96); }
+        
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
+            background: rgba(0,0,0,0.85); display: flex; align-items: center;
+            justify-content: center; z-index: 4000;
+        }
+        .modal-content { 
+            background: var(--card-bg); border-radius: 24px; padding: 18px;
+            max-width: 290px; width: 90%; text-align: center;
+            border: 1px solid var(--border-color); color: var(--text-primary);
+        }
+        .modal-content button { 
+            background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;
+            border: none; padding: 7px 14px; border-radius: 25px; font-weight: bold;
+            cursor: pointer; margin: 5px; font-size: 0.75rem;
+        }
+        .modal-content button:active { transform: scale(0.96); }
+        
+        @media (min-width: 600px) {
+            body { padding: 20px; }
+            .container { max-width: 520px; }
+            .card { padding: 18px; }
+            .day-cell { font-size: 0.7rem; }
+            .action-btn { padding: 10px; font-size: 0.7rem; }
+            .stat-value { font-size: 1.2rem; }
+            .nav-btn { padding: 12px 0; font-size: 0.75rem; }
+            .grid { gap: 4px; }
+        }
+        
+        @media (max-width: 600px) {
+            #trackerScreen { justify-content: space-between; }
+            #trackerScreen .logo { font-size: 1.4rem; margin-bottom: 8px; }
+            #trackerScreen .stats-cards { gap: 8px; margin: 8px 0; }
+            #trackerScreen .stat-card { padding: 10px 8px; border-radius: 16px; }
+            #trackerScreen .stat-value { font-size: 1.3rem; }
+            #trackerScreen .stat-label { font-size: 0.6rem; }
+            #trackerScreen .progress-bar-container { height: 6px; margin: 8px 0; }
+            #trackerScreen .progress-text { font-size: 0.65rem; }
+            #trackerScreen .current-day-text { font-size: 0.75rem; margin: 6px 0; }
+            #trackerScreen .grid { gap: 5px; margin: 8px 0; }
+            #trackerScreen .day-cell { font-size: 0.75rem; border-radius: 10px; }
+            #trackerScreen .day-cell.current { font-size: 0.8rem; }
+            #trackerScreen .action-panel { gap: 8px; margin: 8px 0; }
+            #trackerScreen .action-btn { padding: 12px 8px; font-size: 0.75rem; border-radius: 14px; }
+            #trackerScreen .reset-btn { font-size: 0.65rem; padding: 8px 18px; margin-top: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div id="trackerScreen" class="screen active">
+            <div class="logo">CHOICE</div>
+            <div class="stats-cards">
+                <div class="stat-card"><div class="stat-value" id="totalDaysStat">0</div><div class="stat-label">всего дней</div></div>
+                <div class="stat-card"><div class="stat-value" id="bestStreakStat">0</div><div class="stat-label">лучшая серия</div></div>
+                <div class="stat-card"><div class="stat-value" id="attemptsStat">0</div><div class="stat-label">попыток</div></div>
+            </div>
+            <div class="progress-text" id="progressPercent">0% завершено</div>
+            <div class="progress-bar-container"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="current-day-text" id="currentDayText">День 1 из 30</div>
+            <div class="grid" id="daysGrid"></div>
+            <div class="action-panel">
+                <button class="action-btn success-btn" id="completeBtn">✅ Выполнил</button>
+                <button class="action-btn fail-btn" id="failBtn">❌ Сорвался</button>
+                <button class="action-btn help-btn" id="helpBtn">🆘 ПОМОГИТЕ</button>
+            </div>
+            <button class="reset-btn" id="manualResetBtn">🔄 Начать новую попытку</button>
+        </div>
+
+        <div id="premiumScreen" class="screen">
+            <div class="logo">⚡ Расширь трекер</div>
+            <div class="premium-card">
+                <div class="premium-feature">📅 60 дней вместо 30</div>
+                <div class="premium-feature">🏆 Достижения каждые 10 дней</div>
+                <div class="premium-feature">📜 Сертификат после прохождения</div>
+                <div class="premium-feature">💬 Персональная поддержка автора</div>
+                <div class="premium-feature">✨ Золотая тема оформления</div>
+                <div class="premium-feature">🤖 ИИ-промпты</div>
+            </div>
+            <button class="premium-btn" id="premiumBtn">👑 Получить Premium</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn active" data-screen="tracker">📅 Трекер</button>
+        <button class="nav-btn" data-screen="premium">⚡ Premium</button>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram?.WebApp;
+    const isTelegram = !!tg;
+    if (isTelegram) { tg.ready(); tg.expand(); }
+
+    const quotes = {
+        1: "Первый день — самый простой. Не обманывай себя.",
+        2: "Твой мозг ещё не понял, что ты серьёзно. Покажи ему.",
+        3: "Три дня. Это больше, чем 90% мужчин. Но ты не они.",
+        4: "Если тебе легко — ты делаешь что-то не так. Должно ломать.",
+        5: "Пять дней. Твоя бывшая версия уже не узнала бы тебя.",
+        6: "Триггеры не исчезли. Ты просто стал сильнее их замечать.",
+        7: "Первая неделя — грязь. Ты прошёл её. Дальше — холод.",
+        8: "Мозг захочет сделку. Не торгуйся.",
+        9: "Сублимация — не терпи. Переплавляй похоть в действие.",
+        10: "Десять дней. Дофаминовые рецепторы начали просыпаться.",
+        11: "Не запрещай. Заменяй. Ты умнее своего инстинкта.",
+        12: "Охлаждение — не шутка. Сделай. Прямо сейчас.",
+        13: "Сон — твоя перезагрузка. Не кради её у себя.",
+        14: "Две недели. Ты уже не тот, кем был 14 дней назад.",
+        15: "Пик ломки. Если ты здесь — ты пройдёшь всё.",
+        16: "Не проверяй 'а работает ли ещё'. Работает.",
+        17: "Утренняя эрекция — не враг. Это знак восстановления.",
+        18: "Эротический сон — не срыв. Твоё тело лечится.",
+        19: "Энергия прёт. Не сиди. Делай. Сейчас.",
+        20: "Женщины чувствуют твою силу. Не сливай её на первую встречную.",
+        21: "Три недели. Ты перестроил нейронные сети. Гордись. Но не расслабляйся.",
+        22: "Чувствительность вернулась. Теперь ты снова мужчина.",
+        23: "Злость — это топливо. Сожги её в деле, а не в унитаз.",
+        24: "Тестостерон на пике. Твой голос стал глубже.",
+        25: "Люди тянутся к тебе. Ты стал магнитом.",
+        26: "Осталось 4 дня. Ты не сдашься за четыре дня.",
+        27: "Энергия переполняет. Это суперсила.",
+        28: "Стресс — не оправдание. Стресс — это проверка.",
+        29: "Один день. Ты прошёл 29. Не сломайся.",
+        30: "Ты сделал выбор 30 раз. Ты — мужчина."
+    };
+
+    let currentAttempt = { startDate: null, completedDays: [] };
+    let totalDays = 0, bestStreak = 0, attemptsHistory = [];
+
+    function loadData() {
+        const saved = localStorage.getItem('choice_basic_data');
+        if (saved) { 
+            const data = JSON.parse(saved); 
+            currentAttempt = data.currentAttempt || { startDate: null, completedDays: [] }; 
+            totalDays = data.totalDays || 0; 
+            bestStreak = data.bestStreak || 0; 
+            attemptsHistory = data.attemptsHistory || []; 
+        }
+        if (!currentAttempt.startDate) { 
+            currentAttempt.startDate = new Date().toISOString(); 
+            saveData(); 
+        }
+    }
+
+    function saveData() { 
+        localStorage.setItem('choice_basic_data', JSON.stringify({ 
+            currentAttempt, totalDays, bestStreak, attemptsHistory 
+        })); 
+    }
+
+    function getCurrentDay() { 
+        if (!currentAttempt.startDate) return 1; 
+        const start = new Date(currentAttempt.startDate); 
+        start.setHours(0,0,0,0); 
+        const today = new Date(); 
+        today.setHours(0,0,0,0); 
+        return Math.min(Math.max(Math.floor((today - start) / 86400000) + 1, 1), 30); 
+    }
+
+    function renderAll() { renderTracker(); }
+
+    function renderTracker() {
+        const grid = document.getElementById('daysGrid'); 
+        if (!grid) return; 
+        grid.innerHTML = ''; 
+        const currentDay = getCurrentDay();
+        
+        for (let d = 1; d <= 30; d++) { 
+            const cell = document.createElement('div'); 
+            cell.className = 'day-cell'; 
+            if (currentAttempt.completedDays.includes(d)) cell.classList.add('completed'); 
+            if (d === currentDay && !currentAttempt.completedDays.includes(d)) cell.classList.add('current'); 
+            cell.textContent = d; 
+            cell.onclick = () => { 
+                if (currentAttempt.completedDays.includes(d)) showPopup(quotes[d]); 
+                else if (d === currentDay) showPopup(`Сегодня день ${d}.`); 
+                else if (d < currentDay) showPopup(`День ${d} пропущен.`); 
+                else showPopup(`День ${d} ещё не наступил.`); 
+            }; 
+            grid.appendChild(cell); 
+        }
+        
+        document.getElementById('progressFill').style.width = (currentAttempt.completedDays.length / 30 * 100) + '%'; 
+        document.getElementById('progressPercent').innerHTML = Math.round(currentAttempt.completedDays.length / 30 * 100) + '% завершено'; 
+        document.getElementById('currentDayText').innerHTML = '📅 День ' + currentDay + ' из 30'; 
+        document.getElementById('totalDaysStat').textContent = totalDays; 
+        document.getElementById('bestStreakStat').textContent = bestStreak; 
+        document.getElementById('attemptsStat').textContent = attemptsHistory.length; 
+    }
+
+    function showPopup(msg) { 
+        const modal = document.createElement('div'); 
+        modal.className = 'modal'; 
+        modal.innerHTML = `<div class="modal-content"><div style="white-space:pre-line; margin-bottom:12px;">${msg}</div><button>Закрыть</button></div>`; 
+        document.body.appendChild(modal); 
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); }; 
+        modal.querySelector('button').onclick = () => modal.remove(); 
+    }
+
+    function endAttempt(reason) { 
+        attemptsHistory.push({ 
+            startDate: currentAttempt.startDate, 
+            daysCompleted: currentAttempt.completedDays.length, 
+            endReason: reason, 
+            endDate: new Date().toISOString() 
+        }); 
+        currentAttempt = { startDate: new Date().toISOString(), completedDays: [] }; 
+        saveData(); 
+        renderAll(); 
+    }
+
+    function completeDay() { 
+        const day = getCurrentDay(); 
+        if (day > 30) { showPopup("30 дней завершено!"); return; } 
+        if (currentAttempt.completedDays.includes(day)) { showPopup("День уже выполнен"); return; } 
+        showPopup(quotes[day]); 
+        currentAttempt.completedDays.push(day); 
+        totalDays++; 
+        if (currentAttempt.completedDays.length > bestStreak) bestStreak = currentAttempt.completedDays.length; 
+        saveData(); 
+        renderAll(); 
+        if (currentAttempt.completedDays.length === 30) { 
+            setTimeout(() => { 
+                showPopup("🏆 Ты прошёл 30 дней!"); 
+                endAttempt("Победа! 30 дней"); 
+            }, 500); 
+        }
+    }
+
+    function failDay() { 
+        const day = getCurrentDay(); 
+        if (day > 30) { showPopup("Ты уже прошёл 30 дней"); return; } 
+        if (currentAttempt.completedDays.includes(day)) { showPopup("Этот день уже выполнен"); return; } 
+        
+        showPopup(`❌ Срыв на дне ${day}\nТвои ${currentAttempt.completedDays.length} дня(ей) ушли в копилку`); 
+        endAttempt(`Срыв на дне ${day}`); 
+    }
+
+    function manualReset() { 
+        if (confirm("Начать новую попытку?")) { 
+            if (currentAttempt.completedDays.length > 0) endAttempt("Ручной сброс"); 
+            else { 
+                currentAttempt.startDate = new Date().toISOString(); 
+                saveData(); 
+                renderAll(); 
+            } 
+        } 
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId + 'Screen').classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.nav-btn[data-screen="' + screenId + '"]').classList.add('active');
+    }
+
+    // INIT
+    loadData();
+    renderAll();
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.onclick = () => switchScreen(btn.dataset.screen);
+    });
+    
+    document.getElementById('completeBtn').onclick = completeDay;
+    document.getElementById('failBtn').onclick = failDay;
+    document.getElementById('manualResetBtn').onclick = manualReset;
+    
+    document.getElementById('helpBtn').onclick = () => {
+        showPopup('🆘 Экстренная помощь\n\n1. ВСТАНЬ И ВЫЙДИ\n2. ХОЛОДНАЯ ВОДА\n3. 20 ПРИСЕДАНИЙ\n4. ДЫШИ: 4-7-8\n\nПозыв уйдёт через 15 минут. Держись!');
+    };
+    
+    document.getElementById('premiumBtn').onclick = () => {
+        if (isTelegram) {
+            tg.openTelegramLink('https://t.me/Choice_on_Bot');
+        } else {
+            window.open('https://t.me/Choice_on_Bot', '_blank');
+        }
+    };
+</script>
+</body>
+</html>
