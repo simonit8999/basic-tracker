@@ -209,14 +209,17 @@
         
         .premium-feature {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 0;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 0.75rem;
+            transition: all 0.3s;
         }
         .premium-feature:last-child { border-bottom: none; }
+        .premium-feature:hover {
+            transform: translateX(5px);
+            border-bottom-color: rgba(255,215,0,0.3);
+        }
         
         .premium-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -305,12 +308,48 @@
         <div id="premiumScreen" class="screen">
             <div class="logo">⚡ Расширь трекер</div>
             <div class="premium-card">
-                <div class="premium-feature">📅 60 дней вместо 30</div>
-                <div class="premium-feature">🏆 Достижения каждые 10 дней</div>
-                <div class="premium-feature">📜 Сертификат после прохождения</div>
-                <div class="premium-feature">💬 Персональная поддержка автора</div>
-                <div class="premium-feature">✨ Золотая тема оформления</div>
-                <div class="premium-feature">🤖 ИИ-промпты</div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">📅</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">60 дней вместо 30</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Удвоенный марафон для максимальной трансформации</div>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">🏆</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Достижения каждые 10 дней</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Отмечай прогресс и получай мотивацию на каждом этапе</div>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">📜</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Сертификат после прохождения</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Официальное подтверждение твоей силы воли</div>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">💬</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Персональная поддержка автора</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Прямая связь с создателем для советов и мотивации</div>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">✨</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Золотая тема оформления</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Премиальный дизайн с эксклюзивными анимациями</div>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <span style="font-size: 1.4rem;">🤖</span>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">ИИ-промпты</div>
+                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Умные подсказки и аналитика на основе твоего прогресса</div>
+                    </div>
+                </div>
             </div>
             <button class="premium-btn" id="premiumBtn">👑 Получить Premium</button>
         </div>
