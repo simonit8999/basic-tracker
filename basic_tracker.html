@@ -75,6 +75,34 @@
             100% { background-position: 200% center; }
         }
         
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes premiumGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2), 0 0 40px rgba(255,215,0,0.1); }
+            50% { box-shadow: 0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.2); }
+        }
+        
         .container { 
             max-width: 460px; width: 100%; margin: 0 auto; 
             animation: slideIn 0.5s ease;
@@ -94,6 +122,37 @@
             animation: slideIn 0.4s ease;
         }
         .screen.active { display: flex; }
+        
+        #premiumScreen {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .premium-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #FFD700;
+            animation: floatUp linear infinite;
+        }
+        
+        .premium-content {
+            position: relative;
+            z-index: 1;
+        }
         
         .bottom-nav { 
             margin-top: 8px; display: flex; gap: 6px; 
@@ -204,7 +263,9 @@
             border-radius: 16px;
             padding: 16px;
             margin: 8px 0;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255,215,0,0.3);
+            box-shadow: 0 0 20px rgba(255,215,0,0.1), 0 0 40px rgba(255,215,0,0.05);
+            animation: premiumGlow 3s ease-in-out infinite;
         }
         
         .premium-feature {
@@ -212,7 +273,7 @@
             align-items: flex-start;
             gap: 12px;
             padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255,215,0,0.1);
             transition: all 0.3s;
         }
         .premium-feature:last-child { border-bottom: none; }
@@ -222,7 +283,9 @@
         }
         
         .premium-btn {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
             color: #000;
             border: none;
             padding: 12px;
@@ -232,8 +295,17 @@
             width: 100%;
             font-size: 0.8rem;
             margin-top: 12px;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+            transition: all 0.3s;
         }
-        .premium-btn:active { transform: scale(0.96); }
+        .premium-btn:hover {
+            box-shadow: 0 8px 30px rgba(255,215,0,0.5);
+            transform: translateY(-2px);
+        }
+        .premium-btn:active { 
+            transform: scale(0.96); 
+            box-shadow: 0 2px 10px rgba(255,215,0,0.3);
+        }
         
         .modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
@@ -306,52 +378,55 @@
         </div>
 
         <div id="premiumScreen" class="screen">
-            <div class="logo">⚡ Расширь трекер</div>
-            <div class="premium-card">
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">📅</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">60 дней вместо 30</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Удвоенный марафон для максимальной трансформации</div>
+            <div class="premium-particles" id="premiumParticles"></div>
+            <div class="premium-content">
+                <div class="logo">⚡ Расширь трекер</div>
+                <div class="premium-card">
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">📅</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">60 дней вместо 30</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Удвоенный марафон для максимальной трансформации</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">🏆</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Достижения каждые 10 дней</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Отмечай прогресс и получай мотивацию на каждом этапе</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">📜</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Сертификат после прохождения</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Официальное подтверждение твоей силы воли</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">💬</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Персональная поддержка автора</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Прямая связь с создателем для советов и мотивации</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">✨</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Золотая тема оформления</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Премиальный дизайн с эксклюзивными анимациями</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">🤖</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">ИИ-промпты</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Умные подсказки и аналитика на основе твоего прогресса</div>
+                        </div>
                     </div>
                 </div>
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">🏆</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Достижения каждые 10 дней</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Отмечай прогресс и получай мотивацию на каждом этапе</div>
-                    </div>
-                </div>
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">📜</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Сертификат после прохождения</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Официальное подтверждение твоей силы воли</div>
-                    </div>
-                </div>
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">💬</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Персональная поддержка автора</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Прямая связь с создателем для советов и мотивации</div>
-                    </div>
-                </div>
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">✨</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Золотая тема оформления</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Премиальный дизайн с эксклюзивными анимациями</div>
-                    </div>
-                </div>
-                <div class="premium-feature">
-                    <span style="font-size: 1.4rem;">🤖</span>
-                    <div>
-                        <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">ИИ-промпты</div>
-                        <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Умные подсказки и аналитика на основе твоего прогресса</div>
-                    </div>
-                </div>
+                <button class="premium-btn" id="premiumBtn">👑 Получить Premium</button>
             </div>
-            <button class="premium-btn" id="premiumBtn">👑 Получить Premium</button>
         </div>
     </div>
 
@@ -365,6 +440,38 @@
     const tg = window.Telegram?.WebApp;
     const isTelegram = !!tg;
     if (isTelegram) { tg.ready(); tg.expand(); }
+
+    // Генерация золотых частиц
+    function createPremiumParticles() {
+        const container = document.getElementById('premiumParticles');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'premium-particle';
+            
+            // Рандомная позиция слева
+            particle.style.left = Math.random() * 100 + '%';
+            
+            // Рандомная задержка анимации (0-8 секунд)
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            
+            // Рандомная длительность анимации (5-10 секунд)
+            particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            
+            // Рандомный размер (2-4px)
+            const size = Math.random() * 2 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            
+            // Рандомная прозрачность
+            particle.style.opacity = Math.random() * 0.6 + 0.4;
+            
+            container.appendChild(particle);
+        }
+    }
 
     const quotes = {
         1: "Первый день — самый простой. Не обманывай себя.",
@@ -532,6 +639,7 @@
     // INIT
     loadData();
     renderAll();
+    createPremiumParticles();
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.onclick = () => switchScreen(btn.dataset.screen);
