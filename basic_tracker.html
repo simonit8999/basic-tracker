@@ -110,6 +110,7 @@
             flex: 1; min-height: 0;
             display: none; flex-direction: column; 
             animation: slideIn 0.4s ease;
+            overflow-y: auto;
         }
         .screen.active { display: flex; }
         
@@ -141,6 +142,8 @@
         .premium-content {
             position: relative;
             z-index: 1;
+            overflow-y: auto;
+            flex: 1;
         }
         
         .bottom-nav { 
@@ -374,43 +377,57 @@
                     <div class="premium-feature">
                         <span style="font-size: 1.4rem;">📅</span>
                         <div>
-                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">60 дней вместо 30</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Удвоенный марафон для максимальной трансформации</div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">60 дней полной трансформации</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Не просто "второй месяц". Это новый уровень: ты не борешься с собой — ты строишь себя. Новые задания, новый фокус, новые результаты.</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">🧠</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Перестройка мозга на нейронном уровне</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">60 дней достаточно чтобы сформировать новые нейронные связи. Ты не просто терпишь — ты меняешь работу дофаминовой системы навсегда.</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">💰</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Задания на деньги и доход</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Энергия, которая раньше сливалась — теперь идёт в заработок. Конкретные техники: подушка безопасности, округление трат, поиск новых источников дохода.</div>
+                        </div>
+                    </div>
+                    <div class="premium-feature">
+                        <span style="font-size: 1.4rem;">👥</span>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Социальная прокачка</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Свидания без цели, комплименты незнакомцам, управление конфликтами. Ты учишься общаться с позиции силы, а не нужды.</div>
                         </div>
                     </div>
                     <div class="premium-feature">
                         <span style="font-size: 1.4rem;">🏆</span>
                         <div>
-                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Достижения каждые 10 дней</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Отмечай прогресс и получай мотивацию на каждом этапе</div>
-                        </div>
-                    </div>
-                    <div class="premium-feature">
-                        <span style="font-size: 1.4rem;">📜</span>
-                        <div>
-                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Сертификат после прохождения</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Официальное подтверждение твоей силы воли</div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Достижения каждые 10 дней + Сертификат</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Отмечай прогресс на всём пути. После 60 дней — официальный сертификат, который можно выложить в соцсети.</div>
                         </div>
                     </div>
                     <div class="premium-feature">
                         <span style="font-size: 1.4rem;">💬</span>
                         <div>
                             <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Персональная поддержка автора</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Прямая связь с создателем для советов и мотивации</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Не остаёшься один. Разбор срывов, ответы на вопросы, корректировка стратегии. Прямая связь с создателем.</div>
                         </div>
                     </div>
                     <div class="premium-feature">
-                        <span style="font-size: 1.4rem;">✨</span>
+                        <span style="font-size: 1.4rem;">👑</span>
                         <div>
-                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Золотая тема оформления</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Премиальный дизайн с эксклюзивными анимациями</div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Золотая тема + ИИ-промпты</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Премиальный дизайн с частицами и анимациями. Готовые промпты для ChatGPT/Claude/DeepSeek для анализа твоего прогресса.</div>
                         </div>
                     </div>
                     <div class="premium-feature">
-                        <span style="font-size: 1.4rem;">🤖</span>
+                        <span style="font-size: 1.4rem;">🔄</span>
                         <div>
-                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">ИИ-промпты</div>
-                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Умные подсказки и аналитика на основе твоего прогресса</div>
+                            <div style="color: var(--text-primary); font-weight: bold; font-size: 0.8rem;">Перенос прогресса из базового трекера</div>
+                            <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">Твои 30 дней не пропадут. Прогресс переносится в новый трекер автоматически.</div>
                         </div>
                     </div>
                 </div>
@@ -530,16 +547,12 @@
             
             cell.onclick = () => { 
                 if (currentAttempt.completedDays.includes(d)) {
-                    // День уже выполнен - показываем цитату
                     showPopup(quotes[d] || `День ${d} выполнен! Отличная работа!`); 
                 } else if (d === currentDay) {
-                    // Текущий день - обычное выполнение
                     completeDay(); 
                 } else if (d < currentDay && !currentAttempt.completedDays.includes(d)) {
-                    // Прошедший невыполненный день - предлагаем отметить
                     showCompletePastDayPopup(d);
                 } else {
-                    // Будущий день
                     showPopup(`День ${d} ещё не наступил.`); 
                 }
             };
@@ -593,36 +606,23 @@
     }
 
     function completePastDay(day) {
-        // Проверяем, что день не выполнен
         if (currentAttempt.completedDays.includes(day)) {
             showPopup("Этот день уже выполнен!");
             return;
         }
         
-        // Добавляем день в выполненные
         currentAttempt.completedDays.push(day);
-        
-        // Сортируем completedDays по возрастанию
         currentAttempt.completedDays.sort((a, b) => a - b);
-        
-        // Обновляем общую статистику
         totalDays++;
         
-        // Обновляем лучшую серию
         if (currentAttempt.completedDays.length > bestStreak) {
             bestStreak = currentAttempt.completedDays.length;
         }
         
-        // Сохраняем данные
         saveData();
-        
-        // Обновляем отображение
         renderAll();
-        
-        // Показываем цитату для этого дня
         showPopup(quotes[day] || `✅ День ${day} отмечен как выполненный!`);
         
-        // Проверяем завершение 30 дней
         if (currentAttempt.completedDays.length === 30) {
             setTimeout(() => {
                 showPopup("🏆 Ты прошёл все 30 дней!");
