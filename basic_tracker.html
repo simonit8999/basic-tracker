@@ -527,12 +527,23 @@
             if (currentAttempt.completedDays.includes(d)) cell.classList.add('completed'); 
             if (d === currentDay && !currentAttempt.completedDays.includes(d)) cell.classList.add('current'); 
             cell.textContent = d; 
+            
             cell.onclick = () => { 
-                if (currentAttempt.completedDays.includes(d)) showPopup(quotes[d]); 
-                else if (d === currentDay) showPopup(`Сегодня день ${d}.`); 
-                else if (d < currentDay) showPopup(`День ${d} пропущен.`); 
-                else showPopup(`День ${d} ещё не наступил.`); 
-            }; 
+                if (currentAttempt.completedDays.includes(d)) {
+                    // День уже выполнен - показываем цитату
+                    showPopup(quotes[d] || `День ${d} выполнен! Отличная работа!`); 
+                } else if (d === currentDay) {
+                    // Текущий день - обычное выполнение
+                    completeDay(); 
+                } else if (d < currentDay && !currentAttempt.completedDays.includes(d)) {
+                    // Прошедший невыполненный день - предлагаем отметить
+                    showCompletePastDayPopup(d);
+                } else {
+                    // Будущий день
+                    showPopup(`День ${d} ещё не наступил.`); 
+                }
+            };
+            
             grid.appendChild(cell); 
         }
         
@@ -551,6 +562,73 @@
         document.body.appendChild(modal); 
         modal.onclick = (e) => { if (e.target === modal) modal.remove(); }; 
         modal.querySelector('button').onclick = () => modal.remove(); 
+    }
+
+    function showCompletePastDayPopup(day) {
+        const modal = document.createElement('div'); 
+        modal.className = 'modal'; 
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div style="font-size: 1.2rem; margin-bottom: 12px;">📅 День ${day}</div>
+                <div style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.8rem;">
+                    Этот день был пропущен. Хотите отметить его как выполненный?
+                </div>
+                <button id="confirmPastDay" style="background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; margin: 5px; font-size: 0.8rem;">
+                    ✅ Отметить как выполненный
+                </button>
+                <button id="cancelPastDay" style="background: transparent; border: 1px solid var(--text-primary); color: var(--text-primary); padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; margin: 5px; font-size: 0.8rem;">
+                    Отмена
+                </button>
+            </div>
+        `; 
+        document.body.appendChild(modal); 
+        
+        document.getElementById('confirmPastDay').onclick = () => {
+            modal.remove();
+            completePastDay(day);
+        };
+        
+        document.getElementById('cancelPastDay').onclick = () => modal.remove();
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); }; 
+    }
+
+    function completePastDay(day) {
+        // Проверяем, что день не выполнен
+        if (currentAttempt.completedDays.includes(day)) {
+            showPopup("Этот день уже выполнен!");
+            return;
+        }
+        
+        // Добавляем день в выполненные
+        currentAttempt.completedDays.push(day);
+        
+        // Сортируем completedDays по возрастанию
+        currentAttempt.completedDays.sort((a, b) => a - b);
+        
+        // Обновляем общую статистику
+        totalDays++;
+        
+        // Обновляем лучшую серию
+        if (currentAttempt.completedDays.length > bestStreak) {
+            bestStreak = currentAttempt.completedDays.length;
+        }
+        
+        // Сохраняем данные
+        saveData();
+        
+        // Обновляем отображение
+        renderAll();
+        
+        // Показываем цитату для этого дня
+        showPopup(quotes[day] || `✅ День ${day} отмечен как выполненный!`);
+        
+        // Проверяем завершение 30 дней
+        if (currentAttempt.completedDays.length === 30) {
+            setTimeout(() => {
+                showPopup("🏆 Ты прошёл все 30 дней!");
+                endAttempt("Победа! 30 дней");
+            }, 500);
+        }
     }
 
     function endAttempt(reason) { 
