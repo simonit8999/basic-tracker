@@ -24,6 +24,7 @@
             --cell-bg: #1a1a1a;
             --cell-text: #888;
             --nav-bg: #0a0a0a;
+            --forged: #3a3a3a;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -93,6 +94,12 @@
             100% { transform: translateY(-100vh) scale(1); opacity: 0; }
         }
         
+        @keyframes victoryFlash {
+            0% { opacity: 0; transform: scale(0.95); }
+            30% { opacity: 1; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
         .container { 
             max-width: 460px; width: 100%; margin: 0 auto; 
             animation: slideIn 0.5s ease;
@@ -113,24 +120,71 @@
         }
         .screen.active { display: flex; }
         
+        /* ========== ЗЕЛЁНЫЙ ЭКРАН ПОБЕДЫ ========== */
+        .victory-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0a2e0a;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            animation: victoryFlash 0.4s ease;
+        }
+        
+        .victory-day {
+            font-size: 1rem;
+            color: #4caf50;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .victory-quote {
+            font-size: 1.4rem;
+            color: #ffffff;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            max-width: 320px;
+        }
+        
+        .victory-btn {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(76,175,80,0.4);
+        }
+        
+        .victory-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(76,175,80,0.6);
+        }
+        
         #premiumScreen {
             position: relative;
         }
         
         .premium-particles {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
         }
         
         .particle {
             position: absolute;
-            width: 2px;
-            height: 2px;
+            width: 2px; height: 2px;
             background: #FFD700;
             border-radius: 50%;
             animation: float 6s infinite;
@@ -211,11 +265,62 @@
             aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; 
             border-radius: 7px; font-weight: bold; font-size: 0.6rem; cursor: pointer; 
             transition: all 0.3s; border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
         
         .day-cell:active { transform: scale(0.9); }
-        .day-cell.completed { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; font-size: 0.55rem; }
-        .day-cell.current { border: 2px solid #FFD700; animation: glow 2s ease-in-out infinite; color: #FFD700; font-size: 0.65rem; }
+        .day-cell.completed { 
+            background: linear-gradient(135deg, #2e7d32, #4caf50); 
+            color: white; font-size: 0.55rem; 
+        }
+        .day-cell.current { 
+            border: 2px solid #FFD700; 
+            animation: glow 2s ease-in-out infinite; 
+            color: #FFD700; font-size: 0.65rem; 
+        }
+        
+        /* ========== СЕРАЯ КЛЕТКА СРЫВА (ЗАКАЛКА) ========== */
+        .day-cell.forged {
+            background: var(--forged);
+            color: #888;
+            border: 1px solid #555;
+            font-size: 0.6rem;
+        }
+        
+        /* ========== ТРЕЩИНА НА КЛЕТКЕ СРЫВА ========== */
+        .day-cell.forged::after {
+            content: '';
+            position: absolute;
+            top: 15%; left: 45%;
+            width: 2px;
+            height: 70%;
+            background: rgba(0,0,0,0.5);
+            transform: rotate(15deg);
+            box-shadow: 
+                3px -2px 0 rgba(0,0,0,0.3),
+                -2px 4px 0 rgba(0,0,0,0.3),
+                5px 8px 0 rgba(0,0,0,0.2);
+        }
+        
+        /* ========== ЗАМОК НА БУДУЩИХ ДНЯХ ========== */
+        .day-cell.locked {
+            opacity: 0.5;
+            pointer-events: auto;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .day-cell.locked::before {
+            content: '🔒';
+            position: absolute;
+            font-size: 0.65rem;
+            opacity: 0.7;
+        }
+        
+        .day-cell.locked span {
+            visibility: hidden;
+        }
         
         .action-panel { display: flex; gap: 5px; margin: 4px 0; flex-shrink: 0; }
         
@@ -267,10 +372,6 @@
             transition: all 0.3s;
         }
         .premium-feature:last-child { border-bottom: none; }
-        .premium-feature:hover {
-            transform: translateX(5px);
-            border-bottom-color: rgba(255,215,0,0.3);
-        }
         
         .premium-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
@@ -287,10 +388,6 @@
             margin-top: 12px;
             box-shadow: 0 4px 15px rgba(255,215,0,0.3);
             transition: all 0.3s;
-        }
-        .premium-btn:hover {
-            box-shadow: 0 8px 30px rgba(255,215,0,0.5);
-            transform: translateY(-2px);
         }
         .premium-btn:active { 
             transform: scale(0.96); 
@@ -445,13 +542,10 @@
     const isTelegram = !!tg;
     if (isTelegram) { tg.ready(); tg.expand(); }
 
-    // Генерация золотых частиц (как в лендинге CHOICE)
     function createPremiumParticles() {
         const particlesContainer = document.getElementById('premiumParticles');
         if (!particlesContainer) return;
-        
         particlesContainer.innerHTML = '';
-        
         for (let i = 0; i < 30; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
@@ -497,6 +591,7 @@
 
     let currentAttempt = { startDate: null, completedDays: [] };
     let totalDays = 0, bestStreak = 0, attemptsHistory = [];
+    let forgedDays = []; // Дни срывов (для трещин)
 
     function loadData() {
         const saved = localStorage.getItem('choice_basic_data');
@@ -506,6 +601,7 @@
             totalDays = data.totalDays || 0; 
             bestStreak = data.bestStreak || 0; 
             attemptsHistory = data.attemptsHistory || []; 
+            forgedDays = data.forgedDays || [];
         }
         if (!currentAttempt.startDate) { 
             currentAttempt.startDate = new Date().toISOString(); 
@@ -515,7 +611,7 @@
 
     function saveData() { 
         localStorage.setItem('choice_basic_data', JSON.stringify({ 
-            currentAttempt, totalDays, bestStreak, attemptsHistory 
+            currentAttempt, totalDays, bestStreak, attemptsHistory, forgedDays
         })); 
     }
 
@@ -539,22 +635,39 @@
         for (let d = 1; d <= 30; d++) { 
             const cell = document.createElement('div'); 
             cell.className = 'day-cell'; 
-            if (currentAttempt.completedDays.includes(d)) cell.classList.add('completed'); 
-            if (d === currentDay && !currentAttempt.completedDays.includes(d)) cell.classList.add('current'); 
-            cell.textContent = d; 
+            
+            if (currentAttempt.completedDays.includes(d)) {
+                cell.classList.add('completed');
+                cell.textContent = d;
+            } else if (forgedDays.includes(d)) {
+                cell.classList.add('forged');
+                cell.textContent = d;
+            } else if (d === currentDay && !currentAttempt.completedDays.includes(d)) {
+                cell.classList.add('current');
+                cell.textContent = d;
+            } else if (d > currentDay) {
+                cell.classList.add('locked');
+                cell.innerHTML = '<span>' + d + '</span>';
+            } else if (d < currentDay && !currentAttempt.completedDays.includes(d) && !forgedDays.includes(d)) {
+                cell.textContent = d;
+            } else {
+                cell.textContent = d;
+            }
             
             cell.onclick = () => { 
                 if (currentAttempt.completedDays.includes(d)) {
                     showPopup(quotes[d] || `День ${d} выполнен! Отличная работа!`); 
+                } else if (forgedDays.includes(d)) {
+                    showPopup(`⚔️ День ${d}\n\nБоевое крещение. Ты упал — ты встал. Шрам закалки.`);
                 } else if (d === currentDay) {
                     completeDay(); 
-                } else if (d < currentDay && !currentAttempt.completedDays.includes(d)) {
+                } else if (d < currentDay && !currentAttempt.completedDays.includes(d) && !forgedDays.includes(d)) {
                     showCompletePastDayPopup(d);
-                } else {
-                    showPopup(`День ${d} ещё не наступил.`); 
+                } else if (d > currentDay) {
+                    showPopup(`🔒 День ${d}\n\nТвой наставник ждёт. Не подведи.`);
                 }
-            };
-            
+
+                            
             grid.appendChild(cell); 
         }
         
@@ -573,6 +686,24 @@
         document.body.appendChild(modal); 
         modal.onclick = (e) => { if (e.target === modal) modal.remove(); }; 
         modal.querySelector('button').onclick = () => modal.remove(); 
+    }
+
+    // ========== ЗЕЛЁНЫЙ ЭКРАН ПОБЕДЫ ==========
+    function showVictoryScreen(day, quote) {
+        const overlay = document.createElement('div');
+        overlay.className = 'victory-overlay';
+        overlay.innerHTML = `
+            <div class="victory-day">ДЕНЬ ${day}</div>
+            <div class="victory-quote">${quote}</div>
+            <button class="victory-btn">ПРОДОЛЖИТЬ</button>
+        `;
+        document.body.appendChild(overlay);
+        
+        overlay.querySelector('.victory-btn').onclick = () => {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => overlay.remove(), 300);
+        };
     }
 
     function showCompletePastDayPopup(day) {
@@ -613,19 +744,24 @@
         currentAttempt.completedDays.sort((a, b) => a - b);
         totalDays++;
         
+        // Убираем из forgedDays если был срыв
+        forgedDays = forgedDays.filter(d => d !== day);
+        
         if (currentAttempt.completedDays.length > bestStreak) {
             bestStreak = currentAttempt.completedDays.length;
         }
         
         saveData();
         renderAll();
-        showPopup(quotes[day] || `✅ День ${day} отмечен как выполненный!`);
+        
+        const quote = quotes[day] || `✅ День ${day} отмечен как выполненный!`;
+        showVictoryScreen(day, quote);
         
         if (currentAttempt.completedDays.length === 30) {
             setTimeout(() => {
                 showPopup("🏆 Ты прошёл все 30 дней!");
                 endAttempt("Победа! 30 дней");
-            }, 500);
+            }, 800);
         }
     }
 
@@ -645,17 +781,27 @@
         const day = getCurrentDay(); 
         if (day > 30) { showPopup("30 дней завершено!"); return; } 
         if (currentAttempt.completedDays.includes(day)) { showPopup("День уже выполнен"); return; } 
-        showPopup(quotes[day]); 
+        
+        const quote = quotes[day] || 'Продолжай в том же духе!';
+        
         currentAttempt.completedDays.push(day); 
         totalDays++; 
+        
+        // Убираем из forgedDays если был срыв на этом дне
+        forgedDays = forgedDays.filter(d => d !== day);
+        
         if (currentAttempt.completedDays.length > bestStreak) bestStreak = currentAttempt.completedDays.length; 
         saveData(); 
         renderAll(); 
+        
+        // Показываем зелёный экран вместо попапа
+        showVictoryScreen(day, quote);
+        
         if (currentAttempt.completedDays.length === 30) { 
             setTimeout(() => { 
                 showPopup("🏆 Ты прошёл 30 дней!"); 
                 endAttempt("Победа! 30 дней"); 
-            }, 500); 
+            }, 800); 
         }
     }
 
@@ -664,7 +810,12 @@
         if (day > 30) { showPopup("Ты уже прошёл 30 дней"); return; } 
         if (currentAttempt.completedDays.includes(day)) { showPopup("Этот день уже выполнен"); return; } 
         
-        showPopup(`❌ Срыв на дне ${day}\nТвои ${currentAttempt.completedDays.length} дня(ей) ушли в копилку`); 
+        // Добавляем день в forgedDays для серой клетки с трещиной
+        if (!forgedDays.includes(day)) {
+            forgedDays.push(day);
+        }
+        
+        showPopup(`⚔️ День ${day}\n\nБоевое крещение. Ты упал — ты встал. Шрам закалки.\n\nТвои ${currentAttempt.completedDays.length} дня(ей) ушли в копилку.`); 
         endAttempt(`Срыв на дне ${day}`); 
     }
 
@@ -713,3 +864,4 @@
 </script>
 </body>
 </html>
+           
