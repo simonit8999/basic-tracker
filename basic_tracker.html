@@ -666,10 +666,10 @@
                 } else if (d > currentDay) {
                     showPopup(`🔒 День ${d}\n\nТвой наставник ждёт. Не подведи.`);
                 }
-
-                            
+            }; // ← ЗАКРЫТ onclick
+            
             grid.appendChild(cell); 
-        }
+        } // ← ЗАКРЫТ for
         
         document.getElementById('progressFill').style.width = (currentAttempt.completedDays.length / 30 * 100) + '%'; 
         document.getElementById('progressPercent').innerHTML = Math.round(currentAttempt.completedDays.length / 30 * 100) + '% завершено'; 
@@ -677,7 +677,7 @@
         document.getElementById('totalDaysStat').textContent = totalDays; 
         document.getElementById('bestStreakStat').textContent = bestStreak; 
         document.getElementById('attemptsStat').textContent = attemptsHistory.length; 
-    }
+    } // ← ЗАКРЫТ renderTracker
 
     function showPopup(msg) { 
         const modal = document.createElement('div'); 
