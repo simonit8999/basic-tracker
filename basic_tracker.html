@@ -199,6 +199,11 @@
         .premium-content {
             position: relative; z-index: 1;
             overflow-y: auto; flex: 1;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .premium-content::-webkit-scrollbar {
+            display: none;
         }
         
         .bottom-nav { 
@@ -481,7 +486,7 @@
                     <div class="premium-feature"><span style="font-size:1.4rem;">📅</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">60 дней полной трансформации</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Не просто "второй месяц". Это новый уровень: ты не борешься с собой — ты строишь себя. Новые задания, новый фокус, новые результаты.</div></div></div>
                     <div class="premium-feature"><span style="font-size:1.4rem;">🧠</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Перестройка мозга на нейронном уровне</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">60 дней достаточно чтобы сформировать новые нейронные связи. Ты не просто терпишь — ты меняешь работу дофаминовой системы навсегда.</div></div></div>
                     <div class="premium-feature"><span style="font-size:1.4rem;">💰</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Задания на деньги и доход</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Энергия, которая раньше сливалась — теперь идёт в заработок. Конкретные техники: подушка безопасности, округление трат, поиск новых источников дохода.</div></div></div>
-                    <div class="premium-feature"><span style="font-size:1.4rem;">👥</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Социальная прокачка</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Свидания без цели, комплименты незнакомцам, управление конфликтами. Ты учишься общаться с позиции силы, а не нужды.</div></div></div>
+                    <div class="premium-feature"><span style="font-size:1.4rem;">👥</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Социальная прокачка</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Свидания без цели, комплименты незнакомкам, управление конфликтами. Ты учишься общаться с позиции силы, а не нужды.</div></div></div>
                     <div class="premium-feature"><span style="font-size:1.4rem;">🏆</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Достижения каждые 10 дней + Сертификат</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Отмечай прогресс на всём пути. После 60 дней — официальный сертификат, который можно выложить в соцсети.</div></div></div>
                     <div class="premium-feature"><span style="font-size:1.4rem;">💬</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Персональная поддержка автора</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Не остаёшься один. Разбор срывов, ответы на вопросы, корректировка стратегии. Прямая связь с создателем.</div></div></div>
                     <div class="premium-feature"><span style="font-size:1.4rem;">👑</span><div><div style="color:var(--text-primary);font-weight:bold;font-size:0.8rem;">Золотая тема + ИИ-промпты</div><div style="color:var(--text-muted);font-size:0.65rem;margin-top:2px;">Премиальный дизайн с частицами и анимациями. Готовые промпты для ChatGPT/Claude/DeepSeek для анализа твоего прогресса.</div></div></div>
