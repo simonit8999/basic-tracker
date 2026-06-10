@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CHOICE — 30 дней</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
+        <style>
         :root {
             --bg: #0a0a0a;
             --card-bg: #111111;
@@ -71,6 +71,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -93,6 +98,11 @@
             0% { opacity: 0; transform: scale(0.95); }
             30% { opacity: 1; transform: scale(1); }
             100% { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes cellPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(255,215,0,0.2); }
+            50% { transform: scale(1.06); box-shadow: 0 0 15px rgba(255,215,0,0.5); }
         }
         
         .container { 
@@ -158,8 +168,14 @@
             font-size: 1rem;
             cursor: pointer;
             letter-spacing: 1px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             box-shadow: 0 0 20px rgba(76,175,80,0.4);
+            transform: scale(1);
+        }
+        
+        .victory-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(76,175,80,0.7);
         }
         
         .victory-btn:active {
@@ -194,7 +210,14 @@
         .nav-btn { 
             flex: 1; background: transparent; color: var(--text-muted); 
             border: none; padding: 10px 0; border-radius: 30px; font-weight: bold; 
-            cursor: pointer; font-size: 0.7rem; transition: all 0.3s; text-align: center;
+            cursor: pointer; font-size: 0.7rem; transition: all 0.3s ease; text-align: center;
+            transform: scale(1);
+        }
+        
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255,215,0,0.1);
+            transform: scale(1.03);
         }
         
         .nav-btn.active { 
@@ -209,9 +232,25 @@
         .stat-card { 
             background: var(--stat-bg); border-radius: 12px; padding: 6px 5px; 
             flex: 1; text-align: center; border: 1px solid var(--border-color);
+            transition: all 0.3s ease; cursor: default;
         }
         
-        .stat-value { font-size: 1rem; font-weight: bold; color: var(--text-primary); }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,215,0,0.4);
+            box-shadow: 0 4px 12px rgba(255,215,0,0.15);
+        }
+        
+        .stat-value { 
+            font-size: 1rem; font-weight: bold; color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover .stat-value {
+            color: #FFD700;
+            text-shadow: 0 0 8px rgba(255,215,0,0.5);
+        }
+        
         .stat-label { font-size: 0.5rem; color: var(--text-secondary); margin-top: 1px; }
         
         .progress-bar-container { 
@@ -222,6 +261,8 @@
         .progress-fill { 
             width: 0%; height: 100%; transition: width 0.5s ease, background 0.5s ease; 
             border-radius: 20px;
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
         }
         
         .progress-text { 
@@ -240,18 +281,50 @@
             background: var(--cell-bg); color: var(--cell-text); 
             aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; 
             border-radius: 7px; font-weight: bold; font-size: 0.6rem; cursor: pointer; 
-            transition: all 0.3s; border: 1px solid var(--border-color);
+            transition: all 0.3s ease; border: 1px solid var(--border-color);
             position: relative; overflow: hidden;
         }
         
+        .day-cell:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            z-index: 10;
+        }
+        
         .day-cell:active { transform: scale(0.9); }
-        .day-cell.completed { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; font-size: 0.55rem; }
-        .day-cell.current { border: 2px solid #FFD700; animation: glow 2s ease-in-out infinite; color: #FFD700; font-size: 0.65rem; }
+        
+        .day-cell.completed { 
+            background: linear-gradient(135deg, #2e7d32, #4caf50, #2e7d32);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            color: white; font-size: 0.55rem; 
+        }
+        
+        .day-cell.completed:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(76,175,80,0.6);
+        }
+        
+        .day-cell.current { 
+            border: 2px solid #FFD700; 
+            animation: glow 2s ease-in-out infinite, cellPulse 3s ease-in-out infinite; 
+            color: #FFD700; font-size: 0.65rem; 
+        }
+        
+        .day-cell.current:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 25px rgba(255,215,0,0.8);
+        }
         
         /* ========== СЕРАЯ КЛЕТКА СРЫВА ========== */
         .day-cell.forged {
             background: var(--forged); color: #888;
             border: 1px solid #555; font-size: 0.6rem;
+        }
+        
+        .day-cell.forged:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(136,136,136,0.3);
         }
         
         /* ========== ТРЕЩИНА ========== */
@@ -268,7 +341,12 @@
         
         .action-btn { 
             flex: 1; padding: 8px 5px; border: none; border-radius: 12px; 
-            font-weight: bold; font-size: 0.65rem; cursor: pointer; transition: all 0.3s; text-align: center;
+            font-weight: bold; font-size: 0.65rem; cursor: pointer; transition: all 0.3s ease; text-align: center;
+            transform: scale(1);
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
         }
         
         .action-btn:active { transform: scale(0.95); }
@@ -280,30 +358,53 @@
             background: rgba(255,255,255,0.02); color: var(--text-secondary); 
             border: none; padding: 6px 14px; border-radius: 15px; width: auto;
             margin: 3px auto 0 auto; cursor: pointer; font-size: 0.55rem; 
-            font-weight: 500; text-align: center; flex-shrink: 0; transition: all 0.3s;
-            display: block; letter-spacing: 0.3px;
+            font-weight: 500; text-align: center; flex-shrink: 0; transition: all 0.3s ease;
+            display: block; letter-spacing: 0.3px; transform: scale(1);
         }
+        .reset-btn:hover { background: rgba(255,215,0,0.08); transform: scale(1.03); }
         .reset-btn:active { transform: scale(0.96); background: rgba(255,68,68,0.12); }
         
         .premium-card {
             background: var(--stat-bg); border-radius: 16px; padding: 16px; margin: 8px 0;
-            border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 20px rgba(255,215,0,0.1), 0 0 40px rgba(255,215,0,0.05);
+            border: 1px solid rgba(255,215,0,0.3); 
+            box-shadow: 0 0 20px rgba(255,215,0,0.1), 0 0 40px rgba(255,215,0,0.05);
             animation: premiumGlow 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-card:hover {
+            box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 0 60px rgba(255,215,0,0.1);
         }
         
         .premium-feature {
             display: flex; align-items: flex-start; gap: 12px; padding: 12px 0;
-            border-bottom: 1px solid rgba(255,215,0,0.1); transition: all 0.3s;
+            border-bottom: 1px solid rgba(255,215,0,0.1); transition: all 0.3s ease;
+            cursor: default;
         }
         .premium-feature:last-child { border-bottom: none; }
+        
+        .premium-feature:hover {
+            transform: translateX(5px);
+            border-bottom-color: rgba(255,215,0,0.3);
+            background: rgba(255,215,0,0.03);
+            border-radius: 8px;
+            padding-left: 8px;
+        }
         
         .premium-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
             background-size: 200% 200%; animation: gradientShift 3s ease infinite;
             color: #000; border: none; padding: 12px; border-radius: 25px;
             font-weight: bold; cursor: pointer; width: 100%; font-size: 0.8rem;
-            margin-top: 12px; box-shadow: 0 4px 15px rgba(255,215,0,0.3); transition: all 0.3s;
+            margin-top: 12px; box-shadow: 0 4px 15px rgba(255,215,0,0.3); transition: all 0.3s ease;
+            transform: scale(1);
         }
+        
+        .premium-btn:hover {
+            box-shadow: 0 8px 30px rgba(255,215,0,0.5);
+            transform: scale(1.03);
+        }
+        
         .premium-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(255,215,0,0.3); }
         
         .modal { 
@@ -319,8 +420,9 @@
         .modal-content button { 
             background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;
             border: none; padding: 7px 14px; border-radius: 25px; font-weight: bold;
-            cursor: pointer; margin: 5px; font-size: 0.75rem;
+            cursor: pointer; margin: 5px; font-size: 0.75rem; transition: all 0.3s ease;
         }
+        .modal-content button:hover { transform: scale(1.05); }
         .modal-content button:active { transform: scale(0.96); }
         
         @media (min-width: 600px) {
